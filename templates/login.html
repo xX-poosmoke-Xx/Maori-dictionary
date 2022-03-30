@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Maōri Dictionary | Home{% endblock %}
+
+{% block heading %}Login{% endblock %}
+
+{% block main %}
+<form method="POST">
+    <div>
+        <div>Email:</div>
+        <div><input type="email" name="email" id="email" required></div>
+    </div>
+    <div>
+        <div>Password:</div>
+        <div><input type="password" name="password" id="password" required></div>
+    </div>
+    <div>
+        <div ></div>
+        <div><input type="submit" value="Login"></div>
+    </div>
+</form>
+<p><br><br>If you don't have an account you can <a href="/signup">sign up</a></p>
+
+{% endblock %}
