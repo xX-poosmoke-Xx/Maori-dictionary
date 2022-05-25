@@ -18,9 +18,50 @@ def create_connection(db_file):
     return None
 
 
+def is_logged_in():
+    if session.get('email') is None:
+        print('logged out')
+        return False
+    else:
+        print('logged in')
+        return True
+
+
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', categories=get_categories())
+
+
+def get_categories():
+    con = create_connection(DATABASE)
+    query = "SELECT id, name FROM categories"
+    cur = con.cursor()
+    cur.execute(query)
+    categories = cur.fetchall()
+    con.close()
+    return categories
+
+
+@app.route('/category/<catID>')
+def render_home1(catID):
+    con = create_connection(DATABASE)
+    query = "SELECT id, maori, english, image FROM words WHERE category_id=? ORDER BY maori ASC"
+    cur = con.cursor()
+    cur.execute(query, (catID, ))
+    word_list = cur.fetchall()
+    con.close
+    return render_template("category.html", logged_in=is_logged_in(), categories=get_categories(), words=word_list)
+
+
+@app.route('/word/<wordID>')
+def render_home2(wordID):
+    con = create_connection(DATABASE)
+    query = "SELECT id, maori, english, image, definition, level, category_id FROM words WHERE id=? ORDER BY maori ASC"
+    cur = con.cursor()
+    cur.execute(query, (wordID, ))
+    word_list = cur.fetchall()
+    con.close
+    return render_template("words.html", logged_in=is_logged_in(), categories=get_categories(), words=word_list)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -52,6 +93,17 @@ def login():
             return redirect("/login?error=Incorrect+username+or+password")
 
     return render_template("login.html")
+
+
+def get_categories():
+    con = create_connection(DATABASE)
+    print(con)
+    query = "SELECT id, category FROM categories ORDER BY category ASC"
+    cur = con.cursor()
+    cur.execute(query)
+    category_list = cur.fetchall()
+    con.close()
+    return category_list
 
 
 @app.route('/signup', methods=['POST', 'GET'])

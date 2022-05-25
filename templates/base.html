@@ -24,6 +24,10 @@
 			<ul>
                 <li><a href="\">Home</a></li>
 				<li><a href="\login">Login</a></li>
+				<br>
+				{% for category in categories %}
+				<li><a href="/category/{{ category[0]}}">{{category[1]}}</a></li>
+				{% endfor %}
 
 			</ul>
 		</nav>
