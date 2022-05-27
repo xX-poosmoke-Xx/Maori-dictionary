@@ -23,12 +23,15 @@
 			<span></span>
 			<ul>
                 <li><a href="\">Home</a></li>
-				<li><a href="\login">Login</a></li>
+				{% if logged_in %}
+				<li><a href="/logout">logout</a></li>
+            	{% else %}
+				<li><a href="/login">login</a></li>
+            	{% endif %}
 				<br>
 				{% for category in categories %}
 				<li><a href="/category/{{ category[0]}}">{{category[1]}}</a></li>
 				{% endfor %}
-
 			</ul>
 		</nav>
 

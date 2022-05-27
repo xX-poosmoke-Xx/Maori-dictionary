@@ -29,7 +29,7 @@ def is_logged_in():
 
 @app.route('/')
 def home():
-    return render_template('home.html', categories=get_categories())
+    return render_template('home.html', categories=get_categories(), logged_in=is_logged_in())
 
 
 def get_categories():
@@ -95,6 +95,14 @@ def login():
     return render_template("login.html")
 
 
+@app.route('/logout')
+def logout():
+    print(list(session.keys()))
+    [session.pop(key) for key in list(session.keys())]
+    print(list(session.keys()))
+    return redirect('/')
+
+
 def get_categories():
     con = create_connection(DATABASE)
     print(con)
@@ -115,6 +123,7 @@ def signup():
         email = request.form.get('email')
         password = request.form.get('password')
         password2 = request.form.get('confirm_password')
+        teacher = request.form.get('teacher')
 
         if password != password2:
             return redirect("/signup?error=Please+make+password+match")
@@ -122,11 +131,16 @@ def signup():
         if len(password) < 8:
             return redirect("/signup?error=Please+make+password+at+least+8+characters")
 
+        if teacher == 'teacher':
+            teacher = 1
+        else:
+            teacher = 0
+
         con = create_connection(DATABASE)
 
-        query = "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)"
+        query = "INSERT INTO users (first_name, last_name, email, password, teacher) VALUES (?, ?, ?, ?, ?)"
         cur = con.cursor()
-        cur.execute(query, (first_name, surname, email, password))
+        cur.execute(query, (first_name, surname, email, password, teacher))
         con.commit()
         con.close()
         return redirect("/")
